@@ -125,4 +125,7 @@ dmypy.json
 .pyre/
 
 # Windows Files 
-**/desktop.ini
+**/desktop.inifunk_svd/datasets
+
+funk_svd/datasets/
+.DS_Store

@@ -5,9 +5,10 @@ from funk_svd.dataset import fetch_ml_ratings
 from funk_svd import SVD
 
 from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
 
 
-df = fetch_ml_ratings(variant='100k')
+df = fetch_ml_ratings(variant='20m')
 
 train = df.sample(frac=0.8, random_state=7)
 val = df.drop(train.index.tolist()).sample(frac=0.5, random_state=8)
@@ -20,5 +21,8 @@ svd.fit(X=train, X_val=val, early_stopping=True, shuffle=False)
 
 pred = svd.predict(test)
 mae = mean_absolute_error(test["rating"], pred)
+mse = mean_squared_error(test["rating"], pred)
+rmse = np.sqrt(mse)
 
-print(f'Test MAE: {mae:.2f}')
+print(f'Test MAE: {mae:.4f}')
+print(f'Test RMSE: {rmse:.4f}')
