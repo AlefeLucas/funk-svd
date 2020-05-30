@@ -129,3 +129,4 @@ dmypy.json
 
 funk_svd/datasets/
 .DS_Store
+funk_svd/.DS_Store

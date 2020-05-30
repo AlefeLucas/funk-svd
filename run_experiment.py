@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 
 
-df = fetch_ml_ratings(variant='20m')
+df = fetch_ml_ratings(data_dir_path='funk_svd/datasets/ml-20m.csv', variant='20m')
 
 train = df.sample(frac=0.8, random_state=7)
 val = df.drop(train.index.tolist()).sample(frac=0.5, random_state=8)
