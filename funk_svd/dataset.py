@@ -17,6 +17,7 @@ VARIANTS = {
     '1m': {'filename': 'ratings.dat', 'sep':r'::'},
     '10m': {'filename': 'ratings.dat', 'sep':r'::'},
     '20m': {'filename': 'ratings.csv', 'sep':','},
+    'netflix': {'filename': 'ratings.csv', 'sep':';'},
     '25m': {'filename': 'ratings.csv', 'sep':','}
 }
 
@@ -51,17 +52,21 @@ def get_data_dir_path(data_dir_path=None):
 
 
 def ml_ratings_csv_to_df(csv_path, variant):
-    names = ['u_id', 'i_id', 'rating', 'timestamp']
+    
     dtype = {'u_id': np.uint32, 'i_id': np.uint32, 'rating': np.float64}
 
     def date_parser(time):
         return datetime.datetime.fromtimestamp(float(time))
+    
+    if(variant == 'netflix'):
+        names = ['u_id', 'i_id', 'rating']
+        df = pd.read_csv(csv_path, names=names, dtype=dtype, header=0, sep=VARIANTS[variant]['sep'], engine='python')
+    else: 
+        names = ['u_id', 'i_id', 'rating', 'timestamp']
+        df = pd.read_csv(csv_path, names=names, dtype=dtype, header=0, sep=VARIANTS[variant]['sep'], parse_dates=['timestamp'], date_parser=date_parser, engine='python')
+        df.sort_values(by='timestamp', inplace=True)
+    pass 
 
-    df = pd.read_csv(csv_path, names=names, dtype=dtype, header=0,
-                     sep=VARIANTS[variant]['sep'], parse_dates=['timestamp'],
-                     date_parser=date_parser, engine='python')
-
-    df.sort_values(by='timestamp', inplace=True)
     df.reset_index(drop=True, inplace=True)
 
     return df
