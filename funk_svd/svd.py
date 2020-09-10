@@ -8,6 +8,7 @@ from .fast_methods import _initialization
 from .fast_methods import _run_epoch
 from .fast_methods import _shuffle
 from .utils import timer
+from .dataset import VARIANTS
 
 
 class SVD:
@@ -30,8 +31,10 @@ class SVD:
     """
 
     def __init__(self, learning_rate=.005, regularization=0.02, n_epochs=20,
-                 n_factors=100, min_rating=1, max_rating=5):
+                 n_factors=100, variant="ml20m"):
 
+        min_rating = VARIANTS[variant]['min_rating']
+        max_rating = VARIANTS[variant]['max_rating']
         self.lr = learning_rate
         self.reg = regularization
         self.n_epochs = n_epochs
@@ -58,8 +61,8 @@ class SVD:
         X = X.copy()
 
         if train:
-            u_ids = X['u_id'].unique().tolist()
-            i_ids = X['i_id'].unique().tolist()
+            u_ids = list(set(X['u_id'].tolist()))
+            i_ids = list(set(X['i_id'].tolist()))
 
             self.user_dict = dict(zip(u_ids, list(range(len(u_ids)))))
             self.item_dict = dict(zip(i_ids, list(range(len(i_ids)))))
